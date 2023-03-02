@@ -11,12 +11,15 @@ export class Dollhouse extends Scene {
 
         // At the beginning of our program, load one of each of these shape definitions onto the GPU.
         this.shapes = {
+            //basic shapes
+            box: new defs.Cube(),
+            sphere: new defs.Subdivision_Sphere(4),
+            circle: new defs.Regular_2D_Polygon(50,50),
+            square: new defs.Square(),
             torus: new defs.Torus(15, 15),
             torus2: new defs.Torus(3, 15),
-            sphere: new defs.Subdivision_Sphere(4),
-            circle: new defs.Regular_2D_Polygon(1, 15),
-            // TODO:  Fill in as many additional shape instances as needed in this key/value table.
-            //        (Requirement 1)
+
+            //LEFTOVER FROM ASSIGNMENT 3
             sun: new defs.Subdivision_Sphere(4),
             planet1: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(2),
             planet2: new defs.Subdivision_Sphere(3),
@@ -24,8 +27,28 @@ export class Dollhouse extends Scene {
             planet4: new defs.Subdivision_Sphere(4),
             moon: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(1),
             ring: new defs.Torus(15, 15),
-        //(N.prototype.make_flat_shaded_version())
+
+            //Floor
+            //want to be textured with like a pink shag rug
+            floor: new defs.Capped_Cylinder(50, 50, [[0 , 2], [0, 1]]),
+
+            //Player
+            //want to import object to make it look like a doll,
+            // but for now we are leaving this as a sphere
+            player: new defs.Subdivision_Sphere(4),
+
+            //Dead End 1: hair brush
+            //want to use image for this -- so need to import image file!
+            brush: new defs.Cube(),
+
+            //Dead End 2: sofa
+            //want to use image for this -- so need to import image file!
+            sofa: new defs.Cube(),
+
+
         };
+
+        //const textured = new defs.Textured_Phong(1);
 
         // *** Materials
         this.materials = {
@@ -33,6 +56,8 @@ export class Dollhouse extends Scene {
                 {ambient: .4, diffusivity: .6, color: hex_color("#ffffff")}),
             test2: new Material(new Gouraud_Shader(),
                 {ambient: .4, diffusivity: .6, color: hex_color("#992828")}),
+
+            //LEFTOVER FROM ASSIGNMENT 3
             ring: new Material(new Ring_Shader(),
                 {ambient: 1, diffusivity: 0, color: hex_color("#B08040"), specularity: 0, smoothness: 0}),
             // TODO:  Fill in as many additional material objects as needed in this key/value table.
@@ -41,7 +66,7 @@ export class Dollhouse extends Scene {
                 {ambient: 1, diffusivity: 0, specularity: 0, color: hex_color("#ffffff")}),
             planet1: new Material(new defs.Phong_Shader(),
                 {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#808080")}),
-           planet2_gouraud: new Material(new Gouraud_Shader(),
+            planet2_gouraud: new Material(new Gouraud_Shader(),
                {ambient: 0, diffusivity: 0.1, specularity: 1, color: hex_color("#80FFFF")}),
             planet2_phong: new Material(new defs.Phong_Shader(),
                 {ambient: 0, diffusivity: 0.1, specularity: 1, color: hex_color("#80FFFF")}),
@@ -52,6 +77,16 @@ export class Dollhouse extends Scene {
             moon: new Material(new defs.Phong_Shader(),
                 {ambient: 0, diffusivity: 1, specularity: 1, color: hex_color("#808080")}),
 
+            //floor: new Material(new Shadow_Textured_Phong_Shader(1), {ambient: 0.3, diffusivity: .9, color: hex_color("#ffaf40"), smoothness: 64, color_texture: new Texture("assets/shag_rug.jpeg"), light_depth_texture: null}),
+            floor: new Material(new defs.Phong_Shader(),
+                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#F4C2C2")}),
+
+            player: new Material(new defs.Phong_Shader(),
+                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#68FCFA")}),
+            brush: new Material(new defs.Phong_Shader(),
+                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#CFAFFA")}),
+            sofa:new Material(new defs.Phong_Shader(),
+                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#AFFADC")}),
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -82,6 +117,7 @@ export class Dollhouse extends Scene {
         program_state.projection_transform = Mat4.perspective(
             Math.PI / 4, context.width / context.height, .1, 1000);
 
+        /*LEFTOVER FROM ASSIGNMENT 3
         // TODO: Create Planets (Requirement 1)
         // this.shapes.[XXX].draw([XXX]) // <--example
         //this.shapes.sun.draw(context, program_state, model_transform, this.materials.test.override({color: yellow}));
@@ -171,6 +207,36 @@ export class Dollhouse extends Scene {
         if(this.attached != undefined){
             program_state.camera_inverse = this.attached().map((x,i) => Vector.from(program_state.camera_inverse[i]).mix(x, 0.1));
         }
+        */
+
+        //NEW STUFF
+
+        const light_position = vec4(0, 5, 5, 1);
+        program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
+
+        let model_transform = Mat4.identity();
+
+
+        let floor_transform = model_transform;
+        floor_transform = model_transform.times(Mat4.rotation(0, 0, 1, 0))
+            .times(Mat4.rotation(Math.PI/2, 1, 0, 0))
+            .times(Mat4.translation(0, 0, 2))
+            .times(Mat4.scale(50, 25, 0.5));
+        this.shapes.floor.draw(context, program_state, floor_transform, this.materials.floor);
+
+        let player_transform = model_transform;
+        this.shapes.player.draw(context, program_state, player_transform, this.materials.player);
+
+        let brush_transform = model_transform;
+        brush_transform = model_transform.times(Mat4.translation(-45,0,-17,0))
+            .times(Mat4.scale(0.5,0.5,0.5,0));
+        this.shapes.brush.draw(context, program_state, brush_transform, this.materials.brush);
+
+        let sofa_transform = model_transform;
+        sofa_transform = model_transform.times(Mat4.translation(45,0,17,0))
+            .times(Mat4.scale(5,5,5,0))
+            .times(Mat4.scale(5,5,5,0));
+        this.shapes.sofa.draw(context, program_state, sofa_transform, this.materials.sofa);
     }
 }
 
