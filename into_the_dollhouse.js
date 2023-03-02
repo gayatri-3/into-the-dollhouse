@@ -224,12 +224,12 @@ export class Dollhouse extends Scene {
         this.shapes.player.draw(context, program_state, player_transform, this.materials.player);
 
         let brush_transform = model_transform;
-        brush_transform = brush_transform.times(Mat4.translation(-5,0,0))
+        brush_transform = brush_transform.times(Mat4.translation(-7,0,-3))
             .times(Mat4.scale(0.5,0.5,0.5));
         this.shapes.brush.draw(context, program_state, brush_transform, this.materials.brush);
 
         let sofa_transform = model_transform;
-        sofa_transform = sofa_transform.times(Mat4.translation(15,0,0))
+        sofa_transform = sofa_transform.times(Mat4.translation(15,0,10))
             .times(Mat4.scale(2.5,1,1));
         this.shapes.sofa.draw(context, program_state, sofa_transform, this.materials.sofa);
     }
