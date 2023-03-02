@@ -19,7 +19,7 @@ export class Dollhouse extends Scene {
             torus: new defs.Torus(15, 15),
             torus2: new defs.Torus(3, 15),
 
-            //LEFTOVER FROM ASSIGNMENT 3
+            /*LEFTOVER FROM ASSIGNMENT 3
             sun: new defs.Subdivision_Sphere(4),
             planet1: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(2),
             planet2: new defs.Subdivision_Sphere(3),
@@ -27,6 +27,7 @@ export class Dollhouse extends Scene {
             planet4: new defs.Subdivision_Sphere(4),
             moon: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(1),
             ring: new defs.Torus(15, 15),
+            */
 
             //Floor
             //want to be textured with like a pink shag rug
@@ -57,7 +58,7 @@ export class Dollhouse extends Scene {
             test2: new Material(new Gouraud_Shader(),
                 {ambient: .4, diffusivity: .6, color: hex_color("#992828")}),
 
-            //LEFTOVER FROM ASSIGNMENT 3
+            /*LEFTOVER FROM ASSIGNMENT 3
             ring: new Material(new Ring_Shader(),
                 {ambient: 1, diffusivity: 0, color: hex_color("#B08040"), specularity: 0, smoothness: 0}),
             // TODO:  Fill in as many additional material objects as needed in this key/value table.
@@ -76,6 +77,7 @@ export class Dollhouse extends Scene {
                 {ambient: 0, specularity: 1, color: hex_color("#ADD8E6")}),
             moon: new Material(new defs.Phong_Shader(),
                 {ambient: 0, diffusivity: 1, specularity: 1, color: hex_color("#808080")}),
+            */
 
             //floor: new Material(new Shadow_Textured_Phong_Shader(1), {ambient: 0.3, diffusivity: .9, color: hex_color("#ffaf40"), smoothness: 64, color_texture: new Texture("assets/shag_rug.jpeg"), light_depth_texture: null}),
             floor: new Material(new defs.Phong_Shader(),
@@ -138,12 +140,6 @@ export class Dollhouse extends Scene {
         //sin cuz need change up and then back down, 2pi/10 gives cycle we need, need +1 and /2 to keep bounds 0-1
         let rgb_change = (1+Math.sin(2*Math.PI/10 * t))/2;
         var sun_color = color (1, rgb_change, rgb_change, 1);
-
-        // TODO: Lighting (Requirement 2)
-        const light_position = vec4(0, 0, 0, 1);
-        // The parameters of the Light are: position, color, size
-        //var sun_rad = 1 + ;
-        program_state.lights = [new Light(light_position, sun_color, 10 ** sun_radius)];
 
 
         // TODO:  Fill in matrix operations and drawing code to draw the solar system scene (Requirements 3 and 4)
@@ -211,7 +207,7 @@ export class Dollhouse extends Scene {
 
         //NEW STUFF
 
-        const light_position = vec4(0, 5, 5, 1);
+        const light_position = vec4(0, 10, 10, 1);
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
 
         let model_transform = Mat4.identity();
@@ -228,14 +224,13 @@ export class Dollhouse extends Scene {
         this.shapes.player.draw(context, program_state, player_transform, this.materials.player);
 
         let brush_transform = model_transform;
-        brush_transform = model_transform.times(Mat4.translation(-45,0,-17,0))
-            .times(Mat4.scale(0.5,0.5,0.5,0));
+        brush_transform = brush_transform.times(Mat4.translation(-5,0,0))
+            .times(Mat4.scale(0.5,0.5,0.5));
         this.shapes.brush.draw(context, program_state, brush_transform, this.materials.brush);
 
         let sofa_transform = model_transform;
-        sofa_transform = model_transform.times(Mat4.translation(45,0,17,0))
-            .times(Mat4.scale(5,5,5,0))
-            .times(Mat4.scale(5,5,5,0));
+        sofa_transform = sofa_transform.times(Mat4.translation(15,0,0))
+            .times(Mat4.scale(2.5,1,1));
         this.shapes.sofa.draw(context, program_state, sofa_transform, this.materials.sofa);
     }
 }
