@@ -163,6 +163,42 @@ export class Dollhouse extends Scene {
             .times(Mat4.scale(2.5,1,1));
         this.shapes.sofa.draw(context, program_state, sofa_transform, this.materials.sofa);
 
+        //walls
+        //left when first start
+        let wall1a_transform = model_transform;
+        wall1a_transform = wall1a_transform.times(Mat4.translation(-4,3,12))
+            .times(Mat4.scale(0.5,5,10));
+        this.shapes.wall.draw(context, program_state, wall1a_transform, this.materials.wall);
+
+        //second part of left wall
+        let wall1b_transform = model_transform;
+        wall1b_transform = wall1b_transform.times(Mat4.translation(-4,3,-18))
+            .times(Mat4.scale(0.5,5,10));
+        this.shapes.wall.draw(context, program_state, wall1b_transform, this.materials.wall);
+
+        //back wall of 1st dead end
+        let wall1c_transform = model_transform;
+        wall1c_transform = wall1c_transform.times(Mat4.translation(-12,3,-2.5))
+            .times(Mat4.scale(0.5,5,5.5));
+        this.shapes.wall.draw(context, program_state, wall1c_transform, this.materials.wall);
+
+        //left wall of 1st dead end
+        let wall1d_transform = model_transform;
+        wall1d_transform = wall1d_transform.times(Mat4.translation(-8,3,-8.5))
+            .times(Mat4.scale(4,5,0.5));
+        this.shapes.wall.draw(context, program_state, wall1d_transform, this.materials.wall);
+
+        //right wall of 1st dead end
+        let wall1e_transform = model_transform;
+        wall1e_transform = wall1e_transform.times(Mat4.translation(-8,3,2.5))
+            .times(Mat4.scale(4,5,0.5));
+        this.shapes.wall.draw(context, program_state, wall1e_transform, this.materials.wall);
+
+        //right wall when first start
+        let wall2_transform = model_transform;
+        wall2_transform = wall2_transform.times(Mat4.translation(4,3,1))
+            .times(Mat4.scale(0.5,5,15));
+        this.shapes.wall.draw(context, program_state, wall2_transform, this.materials.wall);
 
     }
 }
