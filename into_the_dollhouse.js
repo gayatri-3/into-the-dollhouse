@@ -1,5 +1,5 @@
 import {defs, tiny} from './examples/common.js';
-//duplicated base project
+
 const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene,
 } = tiny;
@@ -8,6 +8,9 @@ export class Dollhouse extends Scene {
     constructor() {
         // constructor(): Scenes begin by populating initial values like the Shapes and Materials they'll need.
         super();
+
+        //set initial camera view
+        this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
 
         // At the beginning of our program, load one of each of these shape definitions onto the GPU.
         this.shapes = {
@@ -18,16 +21,6 @@ export class Dollhouse extends Scene {
             square: new defs.Square(),
             torus: new defs.Torus(15, 15),
             torus2: new defs.Torus(3, 15),
-
-            /*LEFTOVER FROM ASSIGNMENT 3
-            sun: new defs.Subdivision_Sphere(4),
-            planet1: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(2),
-            planet2: new defs.Subdivision_Sphere(3),
-            planet3: new defs.Subdivision_Sphere(4),
-            planet4: new defs.Subdivision_Sphere(4),
-            moon: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version())(1),
-            ring: new defs.Torus(15, 15),
-            */
 
             //Floor
             //want to be textured with like a pink shag rug
@@ -46,6 +39,8 @@ export class Dollhouse extends Scene {
             //want to use image for this -- so need to import image file!
             sofa: new defs.Cube(),
 
+            //Wall
+            wall: new defs.Cube(),
 
         };
 
@@ -58,56 +53,71 @@ export class Dollhouse extends Scene {
             test2: new Material(new Gouraud_Shader(),
                 {ambient: .4, diffusivity: .6, color: hex_color("#992828")}),
 
-            /*LEFTOVER FROM ASSIGNMENT 3
-            ring: new Material(new Ring_Shader(),
-                {ambient: 1, diffusivity: 0, color: hex_color("#B08040"), specularity: 0, smoothness: 0}),
-            // TODO:  Fill in as many additional material objects as needed in this key/value table.
-            //        (Requirement 4)
-            sun: new Material(new defs.Phong_Shader(),
-                {ambient: 1, diffusivity: 0, specularity: 0, color: hex_color("#ffffff")}),
-            planet1: new Material(new defs.Phong_Shader(),
-                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#808080")}),
-            planet2_gouraud: new Material(new Gouraud_Shader(),
-               {ambient: 0, diffusivity: 0.1, specularity: 1, color: hex_color("#80FFFF")}),
-            planet2_phong: new Material(new defs.Phong_Shader(),
-                {ambient: 0, diffusivity: 0.1, specularity: 1, color: hex_color("#80FFFF")}),
-            planet3: new Material(new defs.Phong_Shader(),
-                {ambient: 0, diffusivity: 1, specularity: 1, color: hex_color("#B08040")}),
-            planet4: new Material(new defs.Phong_Shader(),
-                {ambient: 0, specularity: 1, color: hex_color("#ADD8E6")}),
-            moon: new Material(new defs.Phong_Shader(),
-                {ambient: 0, diffusivity: 1, specularity: 1, color: hex_color("#808080")}),
-            */
-
             //floor: new Material(new Shadow_Textured_Phong_Shader(1), {ambient: 0.3, diffusivity: .9, color: hex_color("#ffaf40"), smoothness: 64, color_texture: new Texture("assets/shag_rug.jpeg"), light_depth_texture: null}),
             floor: new Material(new defs.Phong_Shader(),
                 {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#F4C2C2")}),
 
             player: new Material(new defs.Phong_Shader(),
                 {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#68FCFA")}),
+
             brush: new Material(new defs.Phong_Shader(),
                 {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#CFAFFA")}),
+
             sofa:new Material(new defs.Phong_Shader(),
                 {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#AFFADC")}),
+
+            wall:new Material(new defs.Phong_Shader(),
+                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#FC6C85")}),
         }
 
-        this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
+        /* Player initial coordinates */
+        this.z_movement = 0;
+        this.x_movement = 0;
+
     }
 
     make_control_panel() {
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
-        this.key_triggered_button("View solar system", ["Control", "0"], () => this.attached = () => this.initial_camera_location);
+        //main scene view
+        this.key_triggered_button("View Scene", ["Control", "0"], () => this.attached = () => this.initial_camera_location);
         this.new_line();
-        this.key_triggered_button("Attach to planet 1", ["Control", "1"], () => this.attached = () => this.planet_1);
-        this.key_triggered_button("Attach to planet 2", ["Control", "2"], () => this.attached = () => this.planet_2);
-        this.new_line();
-        this.key_triggered_button("Attach to planet 3", ["Control", "3"], () => this.attached = () => this.planet_3);
-        this.key_triggered_button("Attach to planet 4", ["Control", "4"], () => this.attached = () => this.planet_4);
-        this.new_line();
-        this.key_triggered_button("Attach to moon", ["Control", "m"], () => this.attached = () => this.moon);
+        //this.key_triggered_button("Attach to Doll", ["Control", "1"], () => this.attached = () => this.player);
+        //this.new_line();
+
+        // PLAYER MOVEMENT
+
+        // Up (arrow key up)
+        this.key_triggered_button("Up", ['ArrowUp'], () => {
+
+                this.z_movement = this.z_movement - 1;
+                console.log("up pressed");
+
+        });
+        // Down (arrow key down)
+        this.key_triggered_button("Down", ['ArrowDown'], () => {
+
+                this.z_movement = this.z_movement + 1;
+            console.log("down pressed");
+        });
+
+        // Left (arrow key left)
+        this.key_triggered_button("Left", ['ArrowLeft'], () => {
+
+                this.x_movement = this.x_movement - 1;
+            console.log("left pressed");
+        });
+
+        // Right Movement (arrow key right)
+        this.key_triggered_button("Right", ['ArrowRight'], () => {
+
+                this.x_movement = this.x_movement + 1;
+            console.log("right pressed");
+
+        });
     }
 
     display(context, program_state) {
+        //console.log("display called");
         // display():  Called once per frame of animation.
         // Setup -- This part sets up the scene's overall camera matrix, projection matrix, and lights:
         if (!context.scratchpad.controls) {
@@ -119,100 +129,21 @@ export class Dollhouse extends Scene {
         program_state.projection_transform = Mat4.perspective(
             Math.PI / 4, context.width / context.height, .1, 1000);
 
-        /*LEFTOVER FROM ASSIGNMENT 3
-        // TODO: Create Planets (Requirement 1)
-        // this.shapes.[XXX].draw([XXX]) // <--example
-        //this.shapes.sun.draw(context, program_state, model_transform, this.materials.test.override({color: yellow}));
+
+        //Basic setup variables
         const t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
-        const yellow = hex_color("#fac91a");
         let model_transform = Mat4.identity();
 
-        //sun at origin
-        let sun_transform = model_transform;
-
-        //change radius 1 to 3 over 10 seconds
-        // same reasoning as for color and +2 to keep bounds 1-3
-        var sun_radius = 2 + Math.sin(2 * Math.PI/10 * t);
-        sun_transform = sun_transform.times(Mat4.scale(sun_radius, sun_radius, sun_radius));
-
-        // sun fade red to white as gets bigger
-        // 1001 in red 1111 in white (biggest sin could ever get is 1)
-        //sin cuz need change up and then back down, 2pi/10 gives cycle we need, need +1 and /2 to keep bounds 0-1
-        let rgb_change = (1+Math.sin(2*Math.PI/10 * t))/2;
-        var sun_color = color (1, rgb_change, rgb_change, 1);
-
-
-        // TODO:  Fill in matrix operations and drawing code to draw the solar system scene (Requirements 3 and 4)
-        //sun
-        this.shapes.sun.draw(context, program_state, sun_transform, this.materials.sun.override({color: sun_color}));
-
-        //planets
-        //planet 1
-        var planet1_transform = model_transform;
-        planet1_transform = planet1_transform.times(Mat4.rotation(t, 0, 1, 0))
-                                            .times(Mat4.translation(5, 0, 0));
-        this.shapes.planet1.draw(context, program_state, planet1_transform, this.materials.planet1);
-
-        //planet 2
-        var planet2_transform = model_transform;
-        planet2_transform = planet2_transform.times(Mat4.rotation(t/2, 0, 1, 0))
-            .times(Mat4.translation(8, 0, 0));
-
-        if (t%2 === 0) {
-            this.shapes.planet2.draw(context, program_state, planet2_transform, this.materials.planet2_phong);
-        }
-        else{
-            this.shapes.planet2.draw(context, program_state, planet2_transform, this.materials.planet2_gouraud);
-        }
-
-        //planet 3
-        var planet3_transform = model_transform;
-        planet3_transform = planet3_transform.times(Mat4.rotation(t/3, 0, 1, 0))
-            .times(Mat4.translation(11, 0, 0))
-            .times(Mat4.rotation(t, 1, 0, 0));
-
-        this.shapes.planet3.draw(context, program_state, planet3_transform, this.materials.planet3);
-
-        //planet 3 rings
-        var ring_transform = planet3_transform.times(Mat4.scale(3.5, 3.5, 0.1));
-        this.shapes.ring.draw(context, program_state, ring_transform, this.materials.ring);
-
-        //planet 4
-        var planet4_transform = model_transform;
-        planet4_transform = planet4_transform.times(Mat4.rotation(t/4, 0, 1, 0))
-            .times(Mat4.translation(14, 0, 0));
-
-        this.shapes.planet4.draw(context, program_state, planet4_transform, this.materials.planet4);
-
-        //planet 4 moon
-        var moon_transform = planet4_transform;
-        moon_transform = moon_transform.times(Mat4.rotation(t/2, 0, 1, 0))
-            .times(Mat4.translation(3, 0, 0));
-
-        this.shapes.moon.draw(context, program_state, moon_transform, this.materials.moon);
-
-        //camera button stuff
-        // planet's camera matrix (translate and invert)
-        this.planet_1 = Mat4.inverse(planet1_transform.times(Mat4.translation(0,0,5)));
-        this.planet_2 = Mat4.inverse(planet2_transform.times(Mat4.translation(0,0,5)));
-        this.planet_3 = Mat4.inverse(planet3_transform.times(Mat4.translation(0,0,5)));
-        this.planet_4 = Mat4.inverse(planet4_transform.times(Mat4.translation(0,0,5)));
-        this.moon = Mat4.inverse(moon_transform.times(Mat4.translation(0,0,5)));
-
-
-        if(this.attached != undefined){
-            program_state.camera_inverse = this.attached().map((x,i) => Vector.from(program_state.camera_inverse[i]).mix(x, 0.1));
-        }
-        */
-
-        //NEW STUFF
-
-        const light_position = vec4(0, 10, 10, 1);
+        //lighting
+        const light_position = vec4(0, 10, 20, 1);
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
 
-        let model_transform = Mat4.identity();
+        //player
+        let player_transform = model_transform;
+        player_transform = player_transform.times(Mat4.translation(this.x_movement, 0, this.z_movement));
+        this.shapes.player.draw(context, program_state, player_transform, this.materials.player);
 
-
+        //floor
         let floor_transform = model_transform;
         floor_transform = model_transform.times(Mat4.rotation(0, 0, 1, 0))
             .times(Mat4.rotation(Math.PI/2, 1, 0, 0))
@@ -220,21 +151,23 @@ export class Dollhouse extends Scene {
             .times(Mat4.scale(50, 25, 0.5));
         this.shapes.floor.draw(context, program_state, floor_transform, this.materials.floor);
 
-        let player_transform = model_transform;
-        this.shapes.player.draw(context, program_state, player_transform, this.materials.player);
-
+        //brush
         let brush_transform = model_transform;
-        brush_transform = brush_transform.times(Mat4.translation(-7,0,-3))
-            .times(Mat4.scale(0.5,0.5,0.5));
+        brush_transform = brush_transform.times(Mat4.translation(-9,0,-3))
+            .times(Mat4.scale(1.5,1.5,1.5));
         this.shapes.brush.draw(context, program_state, brush_transform, this.materials.brush);
 
+        //sofa
         let sofa_transform = model_transform;
-        sofa_transform = sofa_transform.times(Mat4.translation(15,0,10))
+        sofa_transform = sofa_transform.times(Mat4.translation(15,0,-10))
             .times(Mat4.scale(2.5,1,1));
         this.shapes.sofa.draw(context, program_state, sofa_transform, this.materials.sofa);
+
+
     }
 }
 
+//Shaders from Assignment 3
 class Gouraud_Shader extends Shader {
     // This is a Shader using Phong_Shader as template
     // TODO: Modify the glsl coder here to create a Gouraud Shader (Planet 2)
