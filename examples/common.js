@@ -913,6 +913,10 @@ const Movement_Controls = defs.Movement_Controls =
                 this.inverse().set(Mat4.look_at(vec3(0, 0, 10), vec3(0, 0, 0), vec3(0, 1, 0)));
                 this.matrix().set(Mat4.inverse(this.inverse()));
             }, "#8B8885");
+            this.key_triggered_button("Bird's eye view", ["o"], () => {
+                this.inverse().set(Mat4.look_at(vec3(0, 20, 30), vec3(0, 0, 0), vec3(0, 1, 0)));
+                this.matrix().set(Mat4.inverse(this.inverse()));
+            });
             this.new_line();
             this.key_triggered_button("from right", ["2"], () => {
                 this.inverse().set(Mat4.look_at(vec3(10, 0, 0), vec3(0, 0, 0), vec3(0, 1, 0)));
