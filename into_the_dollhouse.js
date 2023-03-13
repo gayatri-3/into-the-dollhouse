@@ -1,8 +1,10 @@
 import {defs, tiny} from './examples/common.js';
 
 const {
-    Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene,
+    Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
 } = tiny;
+
+const {Cube, Axis_Arrows, Textured_Phong} = defs
 
 export class Dollhouse extends Scene {
     constructor() {
@@ -25,6 +27,7 @@ export class Dollhouse extends Scene {
             //Floor
             //want to be textured with like a pink shag rug
             floor: new defs.Capped_Cylinder(50, 50, [[0 , 2], [0, 1]]),
+            //floor: new defs.Cube(),
 
             //Player
             //want to import object to make it look like a doll,
@@ -44,18 +47,13 @@ export class Dollhouse extends Scene {
 
         };
 
-        //const textured = new defs.Textured_Phong(1);
-
         // *** Materials
         this.materials = {
-            test: new Material(new defs.Phong_Shader(),
-                {ambient: .4, diffusivity: .6, color: hex_color("#ffffff")}),
-            test2: new Material(new Gouraud_Shader(),
-                {ambient: .4, diffusivity: .6, color: hex_color("#992828")}),
-
-            //floor: new Material(new Shadow_Textured_Phong_Shader(1), {ambient: 0.3, diffusivity: .9, color: hex_color("#ffaf40"), smoothness: 64, color_texture: new Texture("assets/shag_rug.jpeg"), light_depth_texture: null}),
-            floor: new Material(new defs.Phong_Shader(),
-                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#F4C2C2")}),
+            floor: new Material(new Rug_Texture(), {
+                color: hex_color("#000000"),
+                ambient: 1,
+                texture: new Texture("assets/shag_rug.png")
+            }),
 
             player: new Material(new defs.Phong_Shader(),
                 {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#68FCFA")}),
@@ -200,6 +198,26 @@ export class Dollhouse extends Scene {
             .times(Mat4.scale(0.5,5,15));
         this.shapes.wall.draw(context, program_state, wall2_transform, this.materials.wall);
 
+    }
+}
+
+//Assignment Shader
+class Rug_Texture extends Textured_Phong {
+    fragment_glsl_code() {
+        return this.shared_glsl_code() + `
+            varying vec2 f_tex_coord;
+            uniform sampler2D texture;
+            uniform float animation_time;
+            
+            void main(){
+                // Sample the texture image in the correct place:
+                vec4 tex_color = texture2D( texture, f_tex_coord);
+                if( tex_color.w < .01 ) discard;
+                                                                         // Compute an initial (ambient) color:
+                gl_FragColor = vec4( ( tex_color.xyz + shape_color.xyz ) * ambient, shape_color.w * tex_color.w ); 
+                                                                         // Compute the final color with contributions from lights:
+                gl_FragColor.xyz += phong_model_lights( normalize( N ), vertex_worldspace );
+        } `;
     }
 }
 
