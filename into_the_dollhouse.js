@@ -187,7 +187,7 @@ export class Dollhouse extends Scene {
 
         //left wall of 1st dead end
         let wall1d_transform = model_transform;
-        wall1d_transform = wall1d_transform.times(Mat4.translation(-8, 3, -8.5))
+        wall1d_transform = wall1d_transform.times(Mat4.translation(-8.5, 3, -8.5))
             .times(Mat4.scale(4, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall1d_transform, this.materials.wall);
 
@@ -204,13 +204,13 @@ export class Dollhouse extends Scene {
 
         //right wall when first start
         let wall2_transform = model_transform;
-        wall2_transform = wall2_transform.times(Mat4.translation(4, 3, -12))
-            .times(Mat4.scale(0.5, 5, 35));
+        wall2_transform = wall2_transform.times(Mat4.translation(8, 3, -16))
+            .times(Mat4.scale(0.5, 5, 30));
         this.shapes.wall.draw(context, program_state, wall2_transform, this.materials.wall);
 
         let wall3_transform = model_transform;
-        wall3_transform = wall3_transform.times(Mat4.translation(-15.5, 3, -46.5))
-            .times(Mat4.scale(20, 5, 0.5));
+        wall3_transform = wall3_transform.times(Mat4.translation(-13.5, 3, -46.5))
+            .times(Mat4.scale(22, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall3_transform, this.materials.wall);
 
         let wall4_transform = model_transform;
@@ -237,6 +237,96 @@ export class Dollhouse extends Scene {
         wall8_transform = wall8_transform.times(Mat4.translation(-45, 3, -17))
             .times(Mat4.scale(10, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall8_transform, this.materials.wall);
+
+        let wall9_transform = model_transform;
+        wall9_transform = wall9_transform.times(Mat4.translation(-53, 3, 1.5))
+            .times(Mat4.scale(0.5, 5, 8));
+        this.shapes.wall.draw(context, program_state, wall9_transform, this.materials.wall);
+
+        let wall10_transform = model_transform;
+        wall10_transform = wall10_transform.times(Mat4.translation(-66, 3, -18))
+            .times(Mat4.scale(0.5, 5, 40));
+        this.shapes.wall.draw(context, program_state, wall10_transform, this.materials.wall);
+
+        let wall11_transform = model_transform;
+        wall11_transform = wall11_transform.times(Mat4.translation(-34.5, 3, 10))
+            .times(Mat4.scale(19, 5, 0.5));
+        this.shapes.wall.draw(context, program_state, wall11_transform, this.materials.wall);
+
+        let wall12_transform = model_transform;
+        wall12_transform = wall12_transform.times(Mat4.translation(-47, 3, 22))
+            .times(Mat4.scale(19, 5, 0.5));
+        this.shapes.wall.draw(context, program_state, wall12_transform, this.materials.wall);
+
+        let wall13_transform = model_transform;
+        wall13_transform = wall13_transform.times(Mat4.translation(-16, 3, 25))
+            .times(Mat4.scale(0.5, 5, 15));
+        this.shapes.wall.draw(context, program_state, wall13_transform, this.materials.wall);
+
+        let wall14_transform = model_transform;
+        wall14_transform = wall14_transform.times(Mat4.translation(-28.5, 3, 37))
+            .times(Mat4.scale(0.5, 5, 15));
+        this.shapes.wall.draw(context, program_state, wall14_transform, this.materials.wall);
+
+        let wall15_transform = model_transform;
+        wall15_transform = wall15_transform.times(Mat4.translation(-1.5, 3, 40.5))
+            .times(Mat4.scale(15, 5, 0.5));
+        this.shapes.wall.draw(context, program_state, wall15_transform, this.materials.wall);
+
+        let wall16_transform = model_transform;
+        wall16_transform = wall16_transform.times(Mat4.translation(-2, 3, 52.5))
+            .times(Mat4.scale(27, 5, 0.5));
+        this.shapes.wall.draw(context, program_state, wall16_transform, this.materials.wall);
+
+        let wall17_transform = model_transform;
+        wall17_transform = wall17_transform.times(Mat4.translation(24.5, 3, 44))
+            .times(Mat4.scale(0.5, 5, 9));
+        this.shapes.wall.draw(context, program_state, wall17_transform, this.materials.wall);
+
+        let wall18_transform = model_transform;
+        wall18_transform = wall18_transform.times(Mat4.translation(13.5, 3, 32))
+            .times(Mat4.scale(0.5, 5, 9));
+        this.shapes.wall.draw(context, program_state, wall18_transform, this.materials.wall);
+
+        let wall19_transform = model_transform;
+        wall19_transform = wall19_transform.times(Mat4.translation(34, 3, 35))
+            .times(Mat4.scale(10, 5, 0.5));
+        this.shapes.wall.draw(context, program_state, wall19_transform, this.materials.wall);
+
+        let wall20_transform = model_transform;
+        wall20_transform = wall20_transform.times(Mat4.translation(23, 3, 23))
+            .times(Mat4.scale(10, 5, 0.5));
+        this.shapes.wall.draw(context, program_state, wall20_transform, this.materials.wall);
+
+        let wall21_transform = model_transform;
+        wall21_transform = wall21_transform.times(Mat4.translation(44.5, 3, 23.5))
+            .times(Mat4.scale(0.5, 5, 12));
+        this.shapes.wall.draw(context, program_state, wall21_transform, this.materials.wall);
+
+        let wall22_transform = model_transform;
+        wall22_transform = wall22_transform.times(Mat4.translation(32.5, 3, -1.5))
+            .times(Mat4.scale(0.5, 5, 25));
+        this.shapes.wall.draw(context, program_state, wall22_transform, this.materials.wall);
+
+        let wall23_transform = model_transform;
+        wall23_transform = wall23_transform.times(Mat4.translation(56, 3, 12))
+            .times(Mat4.scale(12, 5, 0.5));
+        this.shapes.wall.draw(context, program_state, wall23_transform, this.materials.wall);
+
+        let wall24_transform = model_transform;
+        wall24_transform = wall24_transform.times(Mat4.translation(52, 3, 0))
+            .times(Mat4.scale(8, 5, 0.5));
+        this.shapes.wall.draw(context, program_state, wall24_transform, this.materials.wall);
+
+        let wall25_transform = model_transform;
+        wall25_transform = wall25_transform.times(Mat4.translation(68.5, 3, -2.5))
+            .times(Mat4.scale(0.5, 5, 15));
+        this.shapes.wall.draw(context, program_state, wall25_transform, this.materials.wall);
+
+        let wall26_transform = model_transform;
+        wall26_transform = wall26_transform.times(Mat4.translation(59.5, 3, -8))
+            .times(Mat4.scale(0.5, 5, 8));
+        this.shapes.wall.draw(context, program_state, wall26_transform, this.materials.wall);
     }
 
 
