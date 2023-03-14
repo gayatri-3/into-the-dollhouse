@@ -26,7 +26,7 @@ export class Dollhouse extends Scene {
 
             //Floor
             //want to be textured with like a pink shag rug
-            floor: new defs.Capped_Cylinder(50, 50, [[0 , 2], [0, 1]]),
+            floor: new defs.Capped_Cylinder(30, 30, [[0 , 2], [0, 1]]),
             //floor: new defs.Cube(),
 
             //Player
@@ -133,7 +133,7 @@ export class Dollhouse extends Scene {
         let model_transform = Mat4.identity();
 
         //lighting
-        const light_position = vec4(0, 10, 20, 1);
+        const light_position = vec4(0, 20, 0, 1);
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
 
         //player
@@ -144,61 +144,102 @@ export class Dollhouse extends Scene {
         //floor
         let floor_transform = model_transform;
         floor_transform = model_transform.times(Mat4.rotation(0, 0, 1, 0))
-            .times(Mat4.rotation(Math.PI/2, 1, 0, 0))
+            .times(Mat4.rotation(Math.PI / 2, 1, 0, 0))
             .times(Mat4.translation(0, 0, 2))
-            .times(Mat4.scale(50, 25, 0.5));
+            .times(Mat4.scale(100, 100, 0.5));
         this.shapes.floor.draw(context, program_state, floor_transform, this.materials.floor);
 
         //brush
         let brush_transform = model_transform;
-        brush_transform = brush_transform.times(Mat4.translation(-9,0,-3))
-            .times(Mat4.scale(1.5,1.5,1.5));
+        brush_transform = brush_transform.times(Mat4.translation(-9, 0, -3))
+            .times(Mat4.scale(1.5, 1.5, 1.5));
         this.shapes.brush.draw(context, program_state, brush_transform, this.materials.brush);
 
         //sofa
         let sofa_transform = model_transform;
-        sofa_transform = sofa_transform.times(Mat4.translation(15,0,-10))
-            .times(Mat4.scale(2.5,1,1));
+        sofa_transform = sofa_transform.times(Mat4.translation(15, 0, -10))
+            .times(Mat4.scale(2.5, 1, 1));
         this.shapes.sofa.draw(context, program_state, sofa_transform, this.materials.sofa);
 
+        this.draw_maze(context, program_state, model_transform);
+
+    }
+
+    draw_maze(context, program_state, model_transform) {
         //walls
         //left when first start
         let wall1a_transform = model_transform;
-        wall1a_transform = wall1a_transform.times(Mat4.translation(-4,3,12))
-            .times(Mat4.scale(0.5,5,10));
+        wall1a_transform = wall1a_transform.times(Mat4.translation(-4, 3, 12))
+            .times(Mat4.scale(0.5, 5, 10));
         this.shapes.wall.draw(context, program_state, wall1a_transform, this.materials.wall);
 
         //second part of left wall
         let wall1b_transform = model_transform;
-        wall1b_transform = wall1b_transform.times(Mat4.translation(-4,3,-18))
-            .times(Mat4.scale(0.5,5,10));
+        wall1b_transform = wall1b_transform.times(Mat4.translation(-4, 3, -13))
+            .times(Mat4.scale(0.5, 5, 5));
         this.shapes.wall.draw(context, program_state, wall1b_transform, this.materials.wall);
 
         //back wall of 1st dead end
         let wall1c_transform = model_transform;
-        wall1c_transform = wall1c_transform.times(Mat4.translation(-12,3,-2.5))
-            .times(Mat4.scale(0.5,5,5.5));
+        wall1c_transform = wall1c_transform.times(Mat4.translation(-12, 3, -2.5))
+            .times(Mat4.scale(0.5, 5, 5.5));
         this.shapes.wall.draw(context, program_state, wall1c_transform, this.materials.wall);
 
         //left wall of 1st dead end
         let wall1d_transform = model_transform;
-        wall1d_transform = wall1d_transform.times(Mat4.translation(-8,3,-8.5))
-            .times(Mat4.scale(4,5,0.5));
+        wall1d_transform = wall1d_transform.times(Mat4.translation(-8, 3, -8.5))
+            .times(Mat4.scale(4, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall1d_transform, this.materials.wall);
 
         //right wall of 1st dead end
         let wall1e_transform = model_transform;
-        wall1e_transform = wall1e_transform.times(Mat4.translation(-8,3,2.5))
-            .times(Mat4.scale(4,5,0.5));
+        wall1e_transform = wall1e_transform.times(Mat4.translation(-8, 3, 2.5))
+            .times(Mat4.scale(4, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall1e_transform, this.materials.wall);
+
+        let wall1f_transform = model_transform;
+        wall1f_transform = wall1f_transform.times(Mat4.translation(-4, 3, -30))
+            .times(Mat4.scale(0.5, 5, 5));
+        this.shapes.wall.draw(context, program_state, wall1f_transform, this.materials.wall);
 
         //right wall when first start
         let wall2_transform = model_transform;
-        wall2_transform = wall2_transform.times(Mat4.translation(4,3,1))
-            .times(Mat4.scale(0.5,5,15));
+        wall2_transform = wall2_transform.times(Mat4.translation(4, 3, -12))
+            .times(Mat4.scale(0.5, 5, 35));
         this.shapes.wall.draw(context, program_state, wall2_transform, this.materials.wall);
 
+        let wall3_transform = model_transform;
+        wall3_transform = wall3_transform.times(Mat4.translation(-15.5, 3, -46.5))
+            .times(Mat4.scale(20, 5, 0.5));
+        this.shapes.wall.draw(context, program_state, wall3_transform, this.materials.wall);
+
+        let wall4_transform = model_transform;
+        wall4_transform = wall4_transform.times(Mat4.translation(-13.5, 3, -35.5))
+            .times(Mat4.scale(10, 5, 0.5));
+        this.shapes.wall.draw(context, program_state, wall4_transform, this.materials.wall);
+
+        let wall5_transform = model_transform;
+        wall5_transform = wall5_transform.times(Mat4.translation(-35, 3, -31.5))
+            .times(Mat4.scale(0.5, 5, 15));
+        this.shapes.wall.draw(context, program_state, wall5_transform, this.materials.wall);
+
+        let wall6_transform = model_transform;
+        wall6_transform = wall6_transform.times(Mat4.translation(-23.5, 3, -21))
+            .times(Mat4.scale(0.5, 5, 15));
+        this.shapes.wall.draw(context, program_state, wall6_transform, this.materials.wall);
+
+        let wall7_transform = model_transform;
+        wall7_transform = wall7_transform.times(Mat4.translation(-38, 3, -6))
+            .times(Mat4.scale(15, 5, 0.5));
+        this.shapes.wall.draw(context, program_state, wall7_transform, this.materials.wall);
+
+        let wall8_transform = model_transform;
+        wall8_transform = wall8_transform.times(Mat4.translation(-45, 3, -17))
+            .times(Mat4.scale(10, 5, 0.5));
+        this.shapes.wall.draw(context, program_state, wall8_transform, this.materials.wall);
     }
+
+
 }
 
 //Assignment Shader
