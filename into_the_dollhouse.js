@@ -14,6 +14,9 @@ export class Dollhouse extends Scene {
         //set initial camera view
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
 
+        //set game over camera view
+        this.game_over_camera_location = Mat4.look_at(vec3(0, 100, 20), vec3(0, 100, 0), vec3(0, 1, 0));
+
         // At the beginning of our program, load one of each of these shape definitions onto the GPU.
         this.shapes = {
             //basic shapes
@@ -80,8 +83,9 @@ export class Dollhouse extends Scene {
     make_control_panel() {
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
         //main scene view
-        this.key_triggered_button("View Scene", ["Control", "0"], () => this.attached = () => this.initial_camera_location);
-        this.new_line();
+        //this.key_triggered_button("View Scene", ["Control", "0"], () => this.attached = () => this.initial_camera_location);
+
+        //this.new_line()
         //this.key_triggered_button("Attach to Doll", ["Control", "1"], () => this.attached = () => this.player);
         //this.new_line();
 
@@ -116,7 +120,7 @@ export class Dollhouse extends Scene {
             if (!this.collision) {
                 this.x_movement = this.x_movement + 1;
             }
-            this.collision = false;
+            //this.collision = false;
             console.log("right pressed");
 
         });
@@ -172,6 +176,19 @@ export class Dollhouse extends Scene {
         this.draw_maze(context, program_state, model_transform);
         //console.log(player_transform);
 
+        //if you collided with a wall, game over screen appears
+        if (this.collision){
+            console.log("game over");
+
+            program_state.set_camera(this.game_over_camera_location);
+            //this.shapes.text.set_string("loading...", context.context);
+
+
+            //copied from bird's eye view matrix
+            //this.inverse().set(Mat4.look_at(vec3(0, 150, 40), vec3(0, 0, 0), vec3(0, 1, 0)));
+            //this.matrix().set(Mat4.inverse(this.inverse()));
+        }
+
     }
 
 draw_maze(context, program_state, model_transform) {
@@ -219,6 +236,8 @@ draw_maze(context, program_state, model_transform) {
 
 
         //prints if collision btw player and right wall
+        //checkCollision function with parameters wall_transform matrix and the scaling of x and y that was done
+        //must be done for each wall
 
         if (this.x_movement + 1 >= wall2_transform[0][3] - 0.5 && this.x_movement - 1 <= wall2_transform[0][3] + 0.5
             && this.z_movement + 1 >= wall2_transform[2][3] - 30 && this.z_movement - 1 <= wall2_transform[2][3] + 30  ){
