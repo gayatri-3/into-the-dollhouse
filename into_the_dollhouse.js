@@ -35,22 +35,15 @@ export class Dollhouse extends Scene {
             //floor: new defs.Cube(),
 
             //Player
-            //want to import object to make it look like a doll,
-            // but for now we are leaving this as a sphere
-            player: new defs.Subdivision_Sphere(4),
-
-            //Dead End 1: hair brush
-            //want to use image for this -- so need to import image file!
-            brush: new defs.Cube(),
-
-            //Dead End 2: sofa
-            //want to use image for this -- so need to import image file!
-            //sofa: new defs.Cube(),
+            player: new Shape_From_File("assets/Twilight_Character.obj"),
+            //player: new defs.Subdivision_Sphere(4),
 
             //Wall
             wall: new defs.Cube(),
 
             vanity: new Shape_From_File("assets/vanity.obj"),
+
+            teapot: new Shape_From_File("assets/teapot.obj"),
         };
 
         // *** Materials
@@ -62,14 +55,14 @@ export class Dollhouse extends Scene {
             }),
 
             player: new Material(new defs.Phong_Shader(),
-                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#68FCFA")}),
+                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#f28dae")}),
 
-            brush: new Material(new defs.Phong_Shader(),
-                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#CFAFFA")}),
 
-            //sofa:new Material(new defs.Phong_Shader(),
-            //    {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#AFFADC")}),
             vanity: new Material(new defs.Phong_Shader(1),
+                {ambient: 0.3, diffusivity: .9, specularity: 1, color: hex_color("#f28dae")}),
+
+
+            teapot: new Material(new defs.Phong_Shader(1),
                 {ambient: 0.3, diffusivity: .9, specularity: 1, color: hex_color("#f28dae")}),
 
             wall:new Material(new defs.Phong_Shader(),
@@ -183,13 +176,13 @@ export class Dollhouse extends Scene {
             .times(Mat4.scale(250, 250, 0.5));
         this.shapes.floor.draw(context, program_state, floor_transform, this.materials.floor);
 
-        //brush
-        let brush_transform = model_transform;
-        brush_transform = brush_transform.times(Mat4.translation(-9, 0, -3))
+        //teapot
+        let teapot_transform = model_transform;
+        teapot_transform = teapot_transform.times(Mat4.translation(-9, 0, -3))
             .times(Mat4.scale(1.5, 1.5, 1.5));
-        this.shapes.brush.draw(context, program_state, brush_transform, this.materials.brush);
+        this.shapes.teapot.draw(context, program_state, teapot_transform, this.materials.teapot);
 
-        //sofa
+        //vanity
         let vanity_transform = model_transform;
         vanity_transform = vanity_transform.times(Mat4.rotation(-64, 1, 0, 0));
             //sofa_transform.times(Mat4.translation(15, 0, -10))
