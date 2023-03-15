@@ -1,4 +1,6 @@
 import {defs, tiny} from './examples/common.js';
+import {Color_Phong_Shader, Shadow_Textured_Phong_Shader, LIGHT_DEPTH_TEX_SIZE} from './examples/shadow-demo-shaders.js';
+import { Shape_From_File } from './examples/obj-file-demo.js';
 
 const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
@@ -43,12 +45,12 @@ export class Dollhouse extends Scene {
 
             //Dead End 2: sofa
             //want to use image for this -- so need to import image file!
-            sofa: new defs.Cube(),
+            //sofa: new defs.Cube(),
 
             //Wall
             wall: new defs.Cube(),
 
-
+            vanity: new Shape_From_File("assets/vanity.obj"),
         };
 
         // *** Materials
@@ -65,8 +67,10 @@ export class Dollhouse extends Scene {
             brush: new Material(new defs.Phong_Shader(),
                 {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#CFAFFA")}),
 
-            sofa:new Material(new defs.Phong_Shader(),
-                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#AFFADC")}),
+            //sofa:new Material(new defs.Phong_Shader(),
+            //    {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#AFFADC")}),
+            vanity: new Material(new defs.Phong_Shader(1),
+                {ambient: 0.3, diffusivity: .9, specularity: 1, color: hex_color("#f28dae")}),
 
             wall:new Material(new defs.Phong_Shader(),
                 {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#FC6C85")}),
@@ -81,6 +85,9 @@ export class Dollhouse extends Scene {
                 //why doesn't game_over.jpg work?
             }),
         }
+
+        this.pure = new Material(new Color_Phong_Shader(), {
+        })
 
         /* Player initial coordinates */
         this.z_movement = 0;
@@ -183,10 +190,12 @@ export class Dollhouse extends Scene {
         this.shapes.brush.draw(context, program_state, brush_transform, this.materials.brush);
 
         //sofa
-        let sofa_transform = model_transform;
-        sofa_transform = sofa_transform.times(Mat4.translation(15, 0, -10))
-            .times(Mat4.scale(2.5, 1, 1));
-        this.shapes.sofa.draw(context, program_state, sofa_transform, this.materials.sofa);
+        let vanity_transform = model_transform;
+        vanity_transform = vanity_transform.times(Mat4.rotation(-64, 1, 0, 0));
+            //sofa_transform.times(Mat4.translation(15, 0, -10))
+         //   .times(Mat4.scale(2.5, 1, 1));
+        //this.shapes.sofa.draw(context, program_state, sofa_transform, this.materials.sofa);
+        this.shapes.vanity.draw(context, program_state, vanity_transform, this.materials.vanity);
 
         this.draw_maze(context, program_state, model_transform);
         //console.log(player_transform);
