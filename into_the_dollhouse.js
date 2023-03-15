@@ -72,6 +72,9 @@ export class Dollhouse extends Scene {
         this.z_movement = 0;
         this.x_movement = 0;
 
+        //collision
+        this.collision = false;
+
     }
 
     make_control_panel() {
@@ -94,6 +97,7 @@ export class Dollhouse extends Scene {
         // Down (arrow key down)
         this.key_triggered_button("Down", ['ArrowDown'], () => {
 
+
                 this.z_movement = this.z_movement + 1;
             console.log("down pressed");
         });
@@ -108,6 +112,7 @@ export class Dollhouse extends Scene {
         // Right Movement (arrow key right)
         this.key_triggered_button("Right", ['ArrowRight'], () => {
 
+            // only allow if it would not result in a collision
                 this.x_movement = this.x_movement + 1;
             console.log("right pressed");
 
@@ -162,10 +167,11 @@ export class Dollhouse extends Scene {
         this.shapes.sofa.draw(context, program_state, sofa_transform, this.materials.sofa);
 
         this.draw_maze(context, program_state, model_transform);
+        //console.log(player_transform);
 
     }
 
-    draw_maze(context, program_state, model_transform) {
+draw_maze(context, program_state, model_transform) {
         //walls
         //left when first start
         let wall1a_transform = model_transform;
@@ -207,6 +213,14 @@ export class Dollhouse extends Scene {
         wall2_transform = wall2_transform.times(Mat4.translation(8, 3, -16))
             .times(Mat4.scale(0.5, 5, 30));
         this.shapes.wall.draw(context, program_state, wall2_transform, this.materials.wall);
+
+
+        //prints if collision btw player and right wall
+
+        if (this.x_movement + 1 >= wall2_transform[0][3] - 0.5 && this.x_movement - 1 <= wall2_transform[0][3] + 0.5
+            && this.z_movement + 1 >= wall2_transform[2][3] - 30 && this.z_movement - 1 <= wall2_transform[2][3] + 30  ){
+            console.log("collision");
+        }
 
         let wall3_transform = model_transform;
         wall3_transform = wall3_transform.times(Mat4.translation(-13.5, 3, -46.5))
