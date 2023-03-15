@@ -218,6 +218,8 @@ export class Dollhouse extends Scene {
     }
 
     check_collision(model_transform, x_width, z_width){
+        //check if collision with player and the matrix that is inputed.
+        //check wall collisions
         if (this.x_movement + 1 >= model_transform[0][3] - x_width && this.x_movement - 1 <= model_transform[0][3] + x_width
             && this.z_movement + 1 >= model_transform[2][3] - z_width && this.z_movement - 1 <= model_transform[2][3] + z_width  ){
             console.log("collision");
@@ -232,174 +234,193 @@ draw_maze(context, program_state, model_transform) {
         wall1a_transform = wall1a_transform.times(Mat4.translation(-4, 3, 12))
             .times(Mat4.scale(0.5, 5, 10));
         this.shapes.wall.draw(context, program_state, wall1a_transform, this.materials.wall);
+        this.check_collision(wall1a_transform, 0.5, 10);
 
         //second part of left wall
         let wall1b_transform = model_transform;
         wall1b_transform = wall1b_transform.times(Mat4.translation(-4, 3, -13))
             .times(Mat4.scale(0.5, 5, 5));
         this.shapes.wall.draw(context, program_state, wall1b_transform, this.materials.wall);
+        this.check_collision(wall1b_transform, 0.5, 5);
 
         //back wall of 1st dead end
         let wall1c_transform = model_transform;
         wall1c_transform = wall1c_transform.times(Mat4.translation(-12, 3, -2.5))
             .times(Mat4.scale(0.5, 5, 5.5));
         this.shapes.wall.draw(context, program_state, wall1c_transform, this.materials.wall);
+        this.check_collision(wall1c_transform, 0.5, 5.5);
 
         //left wall of 1st dead end
         let wall1d_transform = model_transform;
         wall1d_transform = wall1d_transform.times(Mat4.translation(-8.5, 3, -8.5))
             .times(Mat4.scale(4, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall1d_transform, this.materials.wall);
+        this.check_collision(wall1d_transform, 4, 0.5);
 
         //right wall of 1st dead end
         let wall1e_transform = model_transform;
         wall1e_transform = wall1e_transform.times(Mat4.translation(-8, 3, 2.5))
             .times(Mat4.scale(4, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall1e_transform, this.materials.wall);
+        this.check_collision(wall1e_transform, 4, 0.5);
 
         let wall1f_transform = model_transform;
         wall1f_transform = wall1f_transform.times(Mat4.translation(-4, 3, -30))
             .times(Mat4.scale(0.5, 5, 5));
         this.shapes.wall.draw(context, program_state, wall1f_transform, this.materials.wall);
+        this.check_collision(wall1f_transform, 0.5, 5);
 
         //right wall when first start
         let wall2_transform = model_transform;
         wall2_transform = wall2_transform.times(Mat4.translation(8, 3, -16))
             .times(Mat4.scale(0.5, 5, 30));
         this.shapes.wall.draw(context, program_state, wall2_transform, this.materials.wall);
+        this.check_collision(wall2_transform, 0.5, 30);
 
-
-        //prints if collision btw player and right wall
-        //checkCollision function with parameters wall_transform matrix and the scaling of x and y that was done
-        //must be done for each wall
-
-    this.check_collision(wall2_transform, 0.5, 30);
-
-        //if (this.x_movement + 1 >= wall2_transform[0][3] - 0.5 && this.x_movement - 1 <= wall2_transform[0][3] + 0.5
-         //   && this.z_movement + 1 >= wall2_transform[2][3] - 30 && this.z_movement - 1 <= wall2_transform[2][3] + 30  ){
-        //    console.log("collision");
-        //    this.collision = true;
-        //}
 
         let wall3_transform = model_transform;
         wall3_transform = wall3_transform.times(Mat4.translation(-13.5, 3, -46.5))
             .times(Mat4.scale(22, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall3_transform, this.materials.wall);
+        this.check_collision(wall3_transform, 22, 0.5);
 
         let wall4_transform = model_transform;
         wall4_transform = wall4_transform.times(Mat4.translation(-13.5, 3, -35.5))
             .times(Mat4.scale(10, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall4_transform, this.materials.wall);
+        this.check_collision(wall4_transform, 10, 0.5);
 
         let wall5_transform = model_transform;
         wall5_transform = wall5_transform.times(Mat4.translation(-35, 3, -31.5))
             .times(Mat4.scale(0.5, 5, 15));
         this.shapes.wall.draw(context, program_state, wall5_transform, this.materials.wall);
+        this.check_collision(wall5_transform, 0.5, 15);
 
         let wall6_transform = model_transform;
         wall6_transform = wall6_transform.times(Mat4.translation(-23.5, 3, -21))
             .times(Mat4.scale(0.5, 5, 15));
         this.shapes.wall.draw(context, program_state, wall6_transform, this.materials.wall);
+        this.check_collision(wall6_transform, 0.5, 15);
 
         let wall7_transform = model_transform;
         wall7_transform = wall7_transform.times(Mat4.translation(-38, 3, -6))
             .times(Mat4.scale(15, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall7_transform, this.materials.wall);
+        this.check_collision(wall7_transform, 15, 0.5);
 
         let wall8_transform = model_transform;
         wall8_transform = wall8_transform.times(Mat4.translation(-45, 3, -17))
             .times(Mat4.scale(10, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall8_transform, this.materials.wall);
+        this.check_collision(wall8_transform, 10, 0.5);
 
         let wall9_transform = model_transform;
         wall9_transform = wall9_transform.times(Mat4.translation(-53, 3, 1.5))
             .times(Mat4.scale(0.5, 5, 8));
         this.shapes.wall.draw(context, program_state, wall9_transform, this.materials.wall);
+        this.check_collision(wall9_transform, 0.5, 8);
 
         let wall10_transform = model_transform;
         wall10_transform = wall10_transform.times(Mat4.translation(-66, 3, -18))
             .times(Mat4.scale(0.5, 5, 40));
         this.shapes.wall.draw(context, program_state, wall10_transform, this.materials.wall);
+        this.check_collision(wall10_transform, 0.5, 40);
 
         let wall11_transform = model_transform;
         wall11_transform = wall11_transform.times(Mat4.translation(-34.5, 3, 10))
             .times(Mat4.scale(19, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall11_transform, this.materials.wall);
+        this.check_collision(wall11_transform, 19, 0.5);
 
         let wall12_transform = model_transform;
         wall12_transform = wall12_transform.times(Mat4.translation(-47, 3, 22))
             .times(Mat4.scale(19, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall12_transform, this.materials.wall);
+        this.check_collision(wall12_transform, 19, 0.5);
 
         let wall13_transform = model_transform;
         wall13_transform = wall13_transform.times(Mat4.translation(-16, 3, 25))
             .times(Mat4.scale(0.5, 5, 15));
         this.shapes.wall.draw(context, program_state, wall13_transform, this.materials.wall);
+        this.check_collision(wall13_transform, 0.5, 15);
 
         let wall14_transform = model_transform;
         wall14_transform = wall14_transform.times(Mat4.translation(-28.5, 3, 37))
             .times(Mat4.scale(0.5, 5, 15));
         this.shapes.wall.draw(context, program_state, wall14_transform, this.materials.wall);
+        this.check_collision(wall14_transform, 0.5, 15);
 
         let wall15_transform = model_transform;
         wall15_transform = wall15_transform.times(Mat4.translation(-1.5, 3, 40.5))
             .times(Mat4.scale(15, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall15_transform, this.materials.wall);
+        this.check_collision(wall15_transform, 15, 0.5);
 
         let wall16_transform = model_transform;
         wall16_transform = wall16_transform.times(Mat4.translation(-2, 3, 52.5))
             .times(Mat4.scale(27, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall16_transform, this.materials.wall);
+        this.check_collision(wall16_transform, 27, 0.5);
 
         let wall17_transform = model_transform;
         wall17_transform = wall17_transform.times(Mat4.translation(24.5, 3, 44))
             .times(Mat4.scale(0.5, 5, 9));
         this.shapes.wall.draw(context, program_state, wall17_transform, this.materials.wall);
+        this.check_collision(wall17_transform, 0.5, 9);
 
         let wall18_transform = model_transform;
         wall18_transform = wall18_transform.times(Mat4.translation(13.5, 3, 32))
             .times(Mat4.scale(0.5, 5, 9));
         this.shapes.wall.draw(context, program_state, wall18_transform, this.materials.wall);
+        this.check_collision(wall18_transform, 0.5, 9);
 
         let wall19_transform = model_transform;
         wall19_transform = wall19_transform.times(Mat4.translation(34, 3, 35))
             .times(Mat4.scale(10, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall19_transform, this.materials.wall);
+        this.check_collision(wall19_transform, 10, 0.5);
 
         let wall20_transform = model_transform;
         wall20_transform = wall20_transform.times(Mat4.translation(23, 3, 23))
             .times(Mat4.scale(10, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall20_transform, this.materials.wall);
+        this.check_collision(wall20_transform, 10, 0.5);
 
         let wall21_transform = model_transform;
         wall21_transform = wall21_transform.times(Mat4.translation(44.5, 3, 23.5))
             .times(Mat4.scale(0.5, 5, 12));
         this.shapes.wall.draw(context, program_state, wall21_transform, this.materials.wall);
+        this.check_collision(wall21_transform, 0.5, 12);
 
         let wall22_transform = model_transform;
         wall22_transform = wall22_transform.times(Mat4.translation(32.5, 3, -1.5))
             .times(Mat4.scale(0.5, 5, 25));
         this.shapes.wall.draw(context, program_state, wall22_transform, this.materials.wall);
+        this.check_collision(wall22_transform, 0.5, 25);
 
         let wall23_transform = model_transform;
         wall23_transform = wall23_transform.times(Mat4.translation(56, 3, 12))
             .times(Mat4.scale(12, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall23_transform, this.materials.wall);
+        this.check_collision(wall23_transform, 12, 0.5);
 
         let wall24_transform = model_transform;
         wall24_transform = wall24_transform.times(Mat4.translation(52, 3, 0))
             .times(Mat4.scale(8, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall24_transform, this.materials.wall);
+        this.check_collision(wall24_transform, 8, 0.5);
 
         let wall25_transform = model_transform;
         wall25_transform = wall25_transform.times(Mat4.translation(68.5, 3, -2.5))
             .times(Mat4.scale(0.5, 5, 15));
         this.shapes.wall.draw(context, program_state, wall25_transform, this.materials.wall);
+        this.check_collision(wall24_transform, 0.5, 15);
 
         let wall26_transform = model_transform;
         wall26_transform = wall26_transform.times(Mat4.translation(59.5, 3, -8))
             .times(Mat4.scale(0.5, 5, 8));
         this.shapes.wall.draw(context, program_state, wall26_transform, this.materials.wall);
+        this.check_collision(wall26_transform, 0.5, 8);
     }
 
 
