@@ -77,7 +77,7 @@ export class Dollhouse extends Scene {
             game_over_image: new Material(new Rug_Texture(), {
                 color: hex_color("#000000"),
                 ambient: 1,
-                texture: new Texture("assets/stars.png")
+                texture: new Texture("assets/game_over.png")
                 //why doesn't game_over.jpg work?
             }),
         }
