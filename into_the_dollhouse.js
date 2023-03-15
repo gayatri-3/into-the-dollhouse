@@ -74,10 +74,10 @@ export class Dollhouse extends Scene {
             //game_over_image: new Material(new defs.Phong_Shader(),
             //    {ambient: 1, diffusivity: 0, specularity: 0, texture: new Texture("assets/game_over_2.jpg")}),
 
-            game_over_image: new Material(new Textured_Phong(), {
+            game_over_image: new Material(new Rug_Texture(), {
                 color: hex_color("#000000"),
                 ambient: 1,
-                texture: new Texture("assets/stars.png", "NEAREST")
+                texture: new Texture("assets/game_over_2.png")
                 //why doesn't game_over.jpg work?
             }),
         }
@@ -203,7 +203,7 @@ export class Dollhouse extends Scene {
             //Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
 
             //camera to set on the game over screen
-            program_state.set_camera(Mat4.look_at(vec3(0, 0, 8), vec3(0.35, 1.5, 0), vec3(0, 1, 0)));
+            program_state.set_camera(Mat4.look_at(vec3(0, 0, 10), vec3(0.35, 1.5, 0), vec3(0, 1, 0)));
             this.shapes.square.draw(context, program_state, model_transform.times(Mat4.scale(8, 6, 0)), this.materials.game_over_image);
 
             //this.shapes.square.draw(context, program_state, Mat4.identity().times(Mat4.rotation(90, 1, 0, 0)).times(Mat4.translation(0, -20, 0)), this.materials.game_over_image);
@@ -215,6 +215,14 @@ export class Dollhouse extends Scene {
             //this.matrix().set(Mat4.inverse(this.inverse()));
         }
 
+    }
+
+    check_collision(model_transform, x_width, z_width){
+        if (this.x_movement + 1 >= model_transform[0][3] - x_width && this.x_movement - 1 <= model_transform[0][3] + x_width
+            && this.z_movement + 1 >= model_transform[2][3] - z_width && this.z_movement - 1 <= model_transform[2][3] + z_width  ){
+            console.log("collision");
+            this.collision = true;
+        }
     }
 
 draw_maze(context, program_state, model_transform) {
@@ -265,11 +273,13 @@ draw_maze(context, program_state, model_transform) {
         //checkCollision function with parameters wall_transform matrix and the scaling of x and y that was done
         //must be done for each wall
 
-        if (this.x_movement + 1 >= wall2_transform[0][3] - 0.5 && this.x_movement - 1 <= wall2_transform[0][3] + 0.5
-            && this.z_movement + 1 >= wall2_transform[2][3] - 30 && this.z_movement - 1 <= wall2_transform[2][3] + 30  ){
-            console.log("collision");
-            this.collision = true;
-        }
+    this.check_collision(wall2_transform, 0.5, 30);
+
+        //if (this.x_movement + 1 >= wall2_transform[0][3] - 0.5 && this.x_movement - 1 <= wall2_transform[0][3] + 0.5
+         //   && this.z_movement + 1 >= wall2_transform[2][3] - 30 && this.z_movement - 1 <= wall2_transform[2][3] + 30  ){
+        //    console.log("collision");
+        //    this.collision = true;
+        //}
 
         let wall3_transform = model_transform;
         wall3_transform = wall3_transform.times(Mat4.translation(-13.5, 3, -46.5))
