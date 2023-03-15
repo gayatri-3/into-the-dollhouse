@@ -113,7 +113,10 @@ export class Dollhouse extends Scene {
         this.key_triggered_button("Right", ['ArrowRight'], () => {
 
             // only allow if it would not result in a collision
+            if (!this.collision) {
                 this.x_movement = this.x_movement + 1;
+            }
+            this.collision = false;
             console.log("right pressed");
 
         });
@@ -220,6 +223,7 @@ draw_maze(context, program_state, model_transform) {
         if (this.x_movement + 1 >= wall2_transform[0][3] - 0.5 && this.x_movement - 1 <= wall2_transform[0][3] + 0.5
             && this.z_movement + 1 >= wall2_transform[2][3] - 30 && this.z_movement - 1 <= wall2_transform[2][3] + 30  ){
             console.log("collision");
+            this.collision = true;
         }
 
         let wall3_transform = model_transform;
