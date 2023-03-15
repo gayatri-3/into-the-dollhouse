@@ -203,8 +203,10 @@ export class Dollhouse extends Scene {
             //Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
 
             //camera to set on the game over screen
-            program_state.set_camera(Mat4.look_at(vec3(0, 0, 10), vec3(0.35, 1.5, 0), vec3(0, 1, 0)));
-            this.shapes.square.draw(context, program_state, model_transform.times(Mat4.scale(8, 6, 0)), this.materials.game_over_image);
+            program_state.set_camera(Mat4.look_at(vec3(0, 10, -60), vec3(0, 10, -70), vec3(0, 1, 0)));
+            let game_over_transform = model_transform;
+            game_over_transform = game_over_transform.times(Mat4.translation(0, 10, -70)).times(Mat4.scale(8, 6, 0));
+            this.shapes.square.draw(context, program_state, game_over_transform, this.materials.game_over_image);
 
             //this.shapes.square.draw(context, program_state, Mat4.identity().times(Mat4.rotation(90, 1, 0, 0)).times(Mat4.translation(0, -20, 0)), this.materials.game_over_image);
             //this.shapes.text.set_string("loading...", context.context);
