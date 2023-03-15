@@ -77,7 +77,7 @@ export class Dollhouse extends Scene {
             game_over_image: new Material(new Rug_Texture(), {
                 color: hex_color("#000000"),
                 ambient: 1,
-                texture: new Texture("assets/game_over_2.png")
+                texture: new Texture("assets/stars.png")
                 //why doesn't game_over.jpg work?
             }),
         }
@@ -422,8 +422,6 @@ draw_maze(context, program_state, model_transform) {
         this.shapes.wall.draw(context, program_state, wall26_transform, this.materials.wall);
         this.check_collision(wall26_transform, 0.5, 8);
     }
-
-
 }
 
 //Assignment Shader
