@@ -15,6 +15,7 @@ export class Dollhouse extends Scene {
 
         //set initial camera view
         this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
+        this.birds_eye = Mat4.look_at(vec3(0, 230, 20), vec3(0, 0, 0), vec3(0, 1, 0));
 
         //set game over camera view
         this.game_over_camera_location = Mat4.look_at(vec3(0, 100, 20), vec3(0, 100, 0), vec3(0, 1, 0));
@@ -55,7 +56,7 @@ export class Dollhouse extends Scene {
             }),
 
             player: new Material(new defs.Phong_Shader(),
-                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#f28dae")}),
+                {ambient: 0, diffusivity: 1, specularity: 0,color: hex_color("#f28dae")}),
 
 
             vanity: new Material(new defs.Phong_Shader(1),
@@ -94,11 +95,18 @@ export class Dollhouse extends Scene {
     make_control_panel() {
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
         //main scene view
-        //this.key_triggered_button("View Scene", ["Control", "0"], () => this.attached = () => this.initial_camera_location);
+        this.key_triggered_button("Initial Camera", ["i"], () => this.attached = () => this.initial_camera_location);
 
-        //this.new_line()
-        //this.key_triggered_button("Attach to Doll", ["Control", "1"], () => this.attached = () => this.player);
-        //this.new_line();
+        this.new_line()
+
+        this.key_triggered_button("Attach to Doll", ["Control", "1"], () => this.attached = () => this.player_behind);
+        this.new_line();
+
+        this.key_triggered_button("Doll's View", ["v"], () => this.attached = () => this.player_front);
+        this.new_line();
+
+        this.key_triggered_button("Bird's Eye View", ["b"], () => this.attached = () => this.birds_eye);
+        this.new_line();
 
         // PLAYER MOVEMENT
 
@@ -165,7 +173,7 @@ export class Dollhouse extends Scene {
 
         //player
         let player_transform = model_transform;
-        player_transform = player_transform.times(Mat4.translation(this.x_movement, 0, this.z_movement));
+        player_transform = player_transform.times(Mat4.translation(this.x_movement, 0, this.z_movement)).times(Mat4.rotation(135, 0, 1, 0));
         this.shapes.player.draw(context, program_state, player_transform, this.materials.player);
 
         //floor
@@ -193,6 +201,11 @@ export class Dollhouse extends Scene {
         this.draw_maze(context, program_state, model_transform);
         //console.log(player_transform);
 
+        // Planet model matrices for camera buttons (5 units away from each planet)
+        this.player_behind = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, -5)).times(Mat4.rotation(135, 0, 1, 0)));
+        this.player_front = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, 5)).times(Mat4.rotation(135, 0, 1, 0)));
+
+
         //if you collided with a wall, game over screen appears
         if (this.collision){
             console.log("game over");
@@ -217,6 +230,11 @@ export class Dollhouse extends Scene {
             //copied from bird's eye view matrix
             //this.inverse().set(Mat4.look_at(vec3(0, 150, 40), vec3(0, 0, 0), vec3(0, 1, 0)));
             //this.matrix().set(Mat4.inverse(this.inverse()));
+        }
+
+        if (this.attached != undefined) {
+            // Blend desired camera position with existing camera matrix (from previous frame) to smoothly pull camera towards planet
+            program_state.camera_inverse = this.attached().map((x,i) => Vector.from(program_state.camera_inverse[i]).mix(x, 0.1));
         }
 
     }
