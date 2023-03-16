@@ -95,7 +95,7 @@ export class Dollhouse extends Scene {
         this.z_movement = 0;
         this.x_movement = 0;
 
-        this.player_angle = 135;
+        this.player_angle = 3.14;
 
         //collision
         this.collision = false;
@@ -126,7 +126,8 @@ export class Dollhouse extends Scene {
             if (!this.collision) {
                 this.z_movement = this.z_movement - 1;
             }
-                console.log("up pressed");
+            this.player_angle = 3.14;
+            console.log("up pressed");
 
         });
         // Down (arrow key down)
@@ -135,6 +136,7 @@ export class Dollhouse extends Scene {
             if (!this.collision) {
                 this.z_movement = this.z_movement + 1;
             }
+            this.player_angle = 0;
             console.log("down pressed");
         });
 
@@ -143,6 +145,7 @@ export class Dollhouse extends Scene {
             if (!this.collision) {
                 this.x_movement = this.x_movement - 1;
             }
+            this.player_angle = 4.71;
             console.log("left pressed");
         });
 
@@ -153,6 +156,7 @@ export class Dollhouse extends Scene {
             if (!this.collision) {
                 this.x_movement = this.x_movement + 1;
             }
+            this.player_angle = 1.57;
             //this.collision = false;
             console.log("right pressed");
 
@@ -202,7 +206,7 @@ export class Dollhouse extends Scene {
 
         //player
         let player_transform = model_transform;
-        player_transform = player_transform.times(Mat4.translation(this.x_movement, 0, this.z_movement)).times(Mat4.rotation(135, 0, 1, 0));
+        player_transform = player_transform.times(Mat4.translation(this.x_movement, 0, this.z_movement)).times(Mat4.rotation(this.player_angle, 0, 1, 0));
         this.shapes.player.draw(context, program_state, player_transform, this.materials.player);
 
         //floor
@@ -240,8 +244,23 @@ export class Dollhouse extends Scene {
         this.shapes.wall.draw(context, program_state, party_transform, this.materials.party);
 
         // Planet model matrices for camera buttons (5 units away from each planet)
-        this.player_behind = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, -5)).times(Mat4.rotation(this.player_angle, 0, 1, 0)));
-        this.player_front = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, 5)).times(Mat4.rotation(this.player_angle, 0, 1, 0)));
+        if(this.player_angle == 3.14){
+            this.player_behind = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, -5)).times(Mat4.rotation(3.14, 0, 1, 0)));
+            this.player_front = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, 5)).times(Mat4.rotation(3.14, 0, 1, 0)));
+        } else if(this.player_angle == 0) {
+            this.player_behind = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, -5)).times(Mat4.rotation(3.14, 0, 1, 0)));
+            this.player_front = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, 5)).times(Mat4.rotation(3.14, 0, 1, 0)));
+        } else if (this.player_angle == 4.71) {
+            this.player_behind = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, -5)).times(Mat4.rotation(3.14, 0, 1, 0)));
+            this.player_front = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, 5)).times(Mat4.rotation(3.14, 0, 1, 0)));
+        } else if(this.player_angle == 1.57) {
+            this.player_behind = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, -5)).times(Mat4.rotation(3.14, 0, 1, 0)));
+            this.player_front = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, 5)).times(Mat4.rotation(3.14, 0, 1, 0)));
+        } else {
+            this.player_behind = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, -5)).times(Mat4.rotation(this.player_angle, 0, 1, 0)));
+            this.player_front = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, 5)).times(Mat4.rotation(this.player_angle, 0, 1, 0)));
+        }
+
 
 
         //if you collided with a wall, game over screen appears
