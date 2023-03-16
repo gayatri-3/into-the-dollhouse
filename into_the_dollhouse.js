@@ -41,6 +41,7 @@ export class Dollhouse extends Scene {
 
             //Wall
             wall: new defs.Cube(),
+            party: new defs.Cube(),
 
             vanity: new Shape_From_File("assets/vanity.obj"),
 
@@ -66,8 +67,17 @@ export class Dollhouse extends Scene {
             teapot: new Material(new defs.Phong_Shader(1),
                 {ambient: 0.3, diffusivity: .9, specularity: 1, color: hex_color("#f28dae")}),
 
-            wall:new Material(new defs.Phong_Shader(),
-                {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#FC6C85")}),
+            wall: new Material(new Texture_Scroll(), {
+                //color: hex_color("#026B4F"),
+                ambient: 1,
+                texture: new Texture("assets/wallpaper.png")
+            }),
+
+            party: new Material(new Texture_Scroll(), {
+                //color: hex_color("#B05DFC"),
+                ambient: 1,
+                texture: new Texture("assets/party.png")
+            }),
 
 
             game_over_image: new Material(new Rug_Texture(), {
@@ -205,13 +215,17 @@ export class Dollhouse extends Scene {
 
         //teapot
         let teapot_transform = model_transform;
-        teapot_transform = teapot_transform.times(Mat4.translation(-9, 0, -3))
-            .times(Mat4.scale(1.5, 1.5, 1.5));
+        teapot_transform = teapot_transform.times(Mat4.translation(-8, 0, -3))
+            .times(Mat4.scale(1.5, 1.5, 1.5))
+            .times(Mat4.rotation(4.7, 1, 0, 0));
         this.shapes.teapot.draw(context, program_state, teapot_transform, this.materials.teapot);
 
         //vanity
         let vanity_transform = model_transform;
-        vanity_transform = vanity_transform.times(Mat4.rotation(-64, 1, 0, 0));
+        vanity_transform = vanity_transform.times(Mat4.translation(-45, 3, -25))
+            .times(Mat4.rotation(4.7, 1, 0, 0))
+            .times(Mat4.rotation(3.14, 0, 0, 1))
+            .times(Mat4.scale(2, 2, 2));
             //sofa_transform.times(Mat4.translation(15, 0, -10))
          //   .times(Mat4.scale(2.5, 1, 1));
         //this.shapes.sofa.draw(context, program_state, sofa_transform, this.materials.sofa);
@@ -219,6 +233,11 @@ export class Dollhouse extends Scene {
 
         this.draw_maze(context, program_state, model_transform);
         //console.log(player_transform);
+
+        let party_transform = model_transform;
+        party_transform = party_transform.times(Mat4.translation(64, 3, -50))
+            .times(Mat4.scale(10, 5, 10));
+        this.shapes.wall.draw(context, program_state, party_transform, this.materials.party);
 
         // Planet model matrices for camera buttons (5 units away from each planet)
         this.player_behind = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, -5)).times(Mat4.rotation(this.player_angle, 0, 1, 0)));
@@ -546,7 +565,6 @@ class Rug_Texture extends Textured_Phong {
 }
 
 class Texture_Scroll extends Textured_Phong {
-    // TODO:  Modify the shader below (right now it's just the same fragment shader as Textured_Phong) for requirement #6.
     fragment_glsl_code() {
         return this.shared_glsl_code() + `
             varying vec2 f_tex_coord;
@@ -565,29 +583,6 @@ class Texture_Scroll extends Textured_Phong {
                 vec4 new_tex_coord = vec4(f_tex_coord, 0, 0) + vec4(1., 1., 0., 1.); 
                 new_tex_coord = slide_matrix * new_tex_coord; 
                 vec4 tex_color = texture2D(texture, new_tex_coord.xy);
-                
-                float u = mod(new_tex_coord.x, 1.0);
-                float v = mod(new_tex_coord.y, 1.0);
-                
-                // left side
-                if (u > 0.15 && u < 0.25 && v > 0.15 && v < 0.85) {
-                    tex_color = vec4(0, 0, 0, 1.0);
-                }
-                 
-                // right side
-                if (u > 0.75 && u < 0.85 && v > 0.15 && v < 0.85) {
-                    tex_color = vec4(0, 0, 0, 1.0);
-                }
-                
-                // bottom sode
-                if (v > 0.15 && v < 0.25 && u > 0.15 && u < 0.85) {
-                    tex_color = vec4(0, 0, 0, 1.0);
-                }
-                
-                // top side
-                if (v > 0.75 && v < 0.85 && u > 0.15 && u < 0.85) {
-                    tex_color = vec4(0, 0, 0, 1.0);
-                }
                 
                 if( tex_color.w < .01 ) discard;
                 
