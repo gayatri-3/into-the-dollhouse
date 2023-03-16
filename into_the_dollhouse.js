@@ -85,6 +85,8 @@ export class Dollhouse extends Scene {
         this.z_movement = 0;
         this.x_movement = 0;
 
+        this.player_angle = 135;
+
         //collision
         this.collision = false;
 
@@ -145,6 +147,25 @@ export class Dollhouse extends Scene {
             console.log("right pressed");
 
         });
+
+        this.new_line();
+
+        //Rotation
+        // Turn Left (l)
+        this.key_triggered_button("Left", ["l"], () => {
+            if (!this.collision) {
+                this.player_angle = this.player_angle - (1/100);
+            }
+            console.log("turn left");
+        });
+
+        // Turn Right (r)
+        this.key_triggered_button("Right", ["r"], () => {
+            if (!this.collision) {
+                this.player_angle = this.player_angle + (1/100);
+            }
+            console.log("turn right");
+        });
     }
 
     display(context, program_state) {
@@ -200,8 +221,8 @@ export class Dollhouse extends Scene {
         //console.log(player_transform);
 
         // Planet model matrices for camera buttons (5 units away from each planet)
-        this.player_behind = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, -5)).times(Mat4.rotation(135, 0, 1, 0)));
-        this.player_front = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, 5)).times(Mat4.rotation(135, 0, 1, 0)));
+        this.player_behind = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, -5)).times(Mat4.rotation(this.player_angle, 0, 1, 0)));
+        this.player_front = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, 5)).times(Mat4.rotation(this.player_angle, 0, 1, 0)));
 
 
         //if you collided with a wall, game over screen appears
