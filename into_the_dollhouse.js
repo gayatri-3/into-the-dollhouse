@@ -69,14 +69,12 @@ export class Dollhouse extends Scene {
             wall:new Material(new defs.Phong_Shader(),
                 {ambient: 0, diffusivity: 1, specularity: 0, color: hex_color("#FC6C85")}),
 
-            //game_over_image: new Material(new defs.Phong_Shader(),
-            //    {ambient: 1, diffusivity: 0, specularity: 0, texture: new Texture("assets/game_over_2.jpg")}),
 
             game_over_image: new Material(new Rug_Texture(), {
                 color: hex_color("#000000"),
                 ambient: 1,
                 texture: new Texture("assets/game_over.png")
-                //why doesn't game_over.jpg work?
+
             }),
         }
 
@@ -210,26 +208,13 @@ export class Dollhouse extends Scene {
         if (this.collision){
             console.log("game over");
 
-
-            //set game over camera view
-            //this.game_over_camera_location = Mat4.look_at(vec3(0, 100, 20), vec3(0, 100, 0), vec3(0, 1, 0));
-
-            //initial camera location
-            //Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
-
             //camera to set on the game over screen
-            program_state.set_camera(Mat4.look_at(vec3(0, 10, -60), vec3(0, 10, -70), vec3(0, 1, 0)));
+            program_state.set_camera(Mat4.look_at(vec3(-100, 10, 10), vec3(-100, 10, 0), vec3(0, 1, 0)));
             let game_over_transform = model_transform;
-            game_over_transform = game_over_transform.times(Mat4.translation(0, 10, -70)).times(Mat4.scale(8, 6, 0));
+            game_over_transform = game_over_transform.times(Mat4.translation(-100, 10, 0)).times(Mat4.scale(8, 6, 0));
+            // -100, 10 , 0
             this.shapes.square.draw(context, program_state, game_over_transform, this.materials.game_over_image);
 
-            //this.shapes.square.draw(context, program_state, Mat4.identity().times(Mat4.rotation(90, 1, 0, 0)).times(Mat4.translation(0, -20, 0)), this.materials.game_over_image);
-            //this.shapes.text.set_string("loading...", context.context);
-
-
-            //copied from bird's eye view matrix
-            //this.inverse().set(Mat4.look_at(vec3(0, 150, 40), vec3(0, 0, 0), vec3(0, 1, 0)));
-            //this.matrix().set(Mat4.inverse(this.inverse()));
         }
 
         if (this.attached != undefined) {
@@ -436,7 +421,7 @@ draw_maze(context, program_state, model_transform) {
         wall25_transform = wall25_transform.times(Mat4.translation(68.5, 3, -13.5))
             .times(Mat4.scale(0.5, 5, 25.5));
         this.shapes.wall.draw(context, program_state, wall25_transform, this.materials.wall);
-        this.check_collision(wall24_transform, 0.5, 25.5);
+        this.check_collision(wall25_transform, 0.5, 25.5);
 
         let wall26_transform = model_transform;
         wall26_transform = wall26_transform.times(Mat4.translation(59.5, 3, -20))
@@ -448,7 +433,7 @@ draw_maze(context, program_state, model_transform) {
         wall27_transform = wall27_transform.times(Mat4.translation(38.5, 3, -26))
         .times(Mat4.scale(6, 5, 0.5));
         this.shapes.wall.draw(context, program_state, wall27_transform, this.materials.wall);
-        this.check_collision(wall27_transform, 8, 0.5);
+        this.check_collision(wall27_transform, 6, 0.5);
 
         let wall28_transform = model_transform;
         wall28_transform = wall28_transform.times(Mat4.translation(44, 3, -13))
