@@ -57,7 +57,7 @@ export class Dollhouse extends Scene {
             }),
 
             player: new Material(new defs.Phong_Shader(),
-                {ambient: 0, diffusivity: 1, specularity: 0,color: hex_color("#f28dae")}),
+                {ambient: 0.5, diffusivity: 1, specularity: 0,color: hex_color("#c175ff")}),
 
 
             vanity: new Material(new defs.Phong_Shader(1),
@@ -70,13 +70,13 @@ export class Dollhouse extends Scene {
             wall: new Material(new Texture_Scroll(), {
                 //color: hex_color("#026B4F"),
                 ambient: 1,
-                texture: new Texture("assets/wallpaper.png")
+                texture: new Texture("assets/wallpaper.png", "LINEAR_MIPMAP_LINEAR")
             }),
 
             party: new Material(new Texture_Scroll(), {
                 //color: hex_color("#B05DFC"),
                 ambient: 1,
-                texture: new Texture("assets/party.png")
+                texture: new Texture("assets/party.png", "LINEAR_MIPMAP_LINEAR")
             }),
 
 
@@ -84,6 +84,13 @@ export class Dollhouse extends Scene {
                 color: hex_color("#000000"),
                 ambient: 1,
                 texture: new Texture("assets/game_over.png")
+
+            }),
+
+            tea_party_image: new Material(new Rug_Texture(), {
+                color: hex_color("#000000"),
+                ambient: 1,
+                texture: new Texture("assets/girls_teaparty_256x256.jpg")
 
             }),
         }
@@ -99,6 +106,9 @@ export class Dollhouse extends Scene {
 
         //collision
         this.collision = false;
+
+        //teaparty collision
+        this.teaparty = false;
 
     }
 
@@ -164,7 +174,7 @@ export class Dollhouse extends Scene {
         // Turn Left (l)
         this.key_triggered_button("Left", ["l"], () => {
             if (!this.collision) {
-                this.player_angle = this.player_angle - (1/100);
+                this.player_angle = this.player_angle + (1/100);
             }
             console.log("turn left");
         });
@@ -172,7 +182,7 @@ export class Dollhouse extends Scene {
         // Turn Right (r)
         this.key_triggered_button("Right", ["r"], () => {
             if (!this.collision) {
-                this.player_angle = this.player_angle + (1/100);
+                this.player_angle = this.player_angle - (1/100);
             }
             console.log("turn right");
         });
@@ -239,6 +249,7 @@ export class Dollhouse extends Scene {
             .times(Mat4.scale(10, 5, 10));
         this.shapes.wall.draw(context, program_state, party_transform, this.materials.party);
 
+
         // Planet model matrices for camera buttons (5 units away from each planet)
         this.player_behind = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, -5)).times(Mat4.rotation(this.player_angle, 0, 1, 0)));
         this.player_front = Mat4.inverse(player_transform.times(Mat4.translation(0, 0, 5)).times(Mat4.rotation(this.player_angle, 0, 1, 0)));
@@ -254,6 +265,24 @@ export class Dollhouse extends Scene {
             game_over_transform = game_over_transform.times(Mat4.translation(-100, 10, 0)).times(Mat4.scale(8, 6, 0));
             // -100, 10 , 0
             this.shapes.square.draw(context, program_state, game_over_transform, this.materials.game_over_image);
+
+        }
+
+        //check if player collided with tea party
+        //duplicate of check_collision function with parameters from party_transform
+        if (this.x_movement + 1 >= party_transform[0][3] - 10 && this.x_movement - 1 <= party_transform[0][3] + 10
+            && this.z_movement + 1 >= party_transform[2][3] - 10 && this.z_movement - 1 <= party_transform[2][3] + 10  ){
+            this.teaparty = true;
+        }
+
+        //show tea party scene
+        if (this.teaparty){
+            console.log("reached tea party");
+            program_state.set_camera(Mat4.look_at(vec3(-100, 10, 10), vec3(-100, 10, 0), vec3(0, 1, 0)));
+            let tea_party_transform = model_transform;
+            tea_party_transform = tea_party_transform.times(Mat4.translation(-100, 10, 0)).times(Mat4.scale(8, 6, 0));
+            // -100, 10 , 0
+            this.shapes.square.draw(context, program_state, tea_party_transform, this.materials.tea_party_image);
 
         }
 
@@ -273,6 +302,7 @@ export class Dollhouse extends Scene {
             this.collision = true;
         }
     }
+
 
 draw_maze(context, program_state, model_transform) {
         //walls
