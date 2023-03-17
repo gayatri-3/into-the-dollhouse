@@ -1,5 +1,5 @@
 # Into the Dollhouse
-Help y/n get to the tea party! 
+Help Twilight Sparkle get to the tea party! 
 
 ## Game Overview 
 A one-player maze game with a dollhouse theme. 
