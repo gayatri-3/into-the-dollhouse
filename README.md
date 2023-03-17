@@ -35,3 +35,6 @@ Gayatri
 * Import object files
 
 Pavana
+* Transformation of objects (walls, dead ends, etc)
+* Texture Mapping (for floor, walls)
+* Camera Perspective ("b" birds eye view)
