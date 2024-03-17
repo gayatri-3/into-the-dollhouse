@@ -11,7 +11,7 @@ There are themed dead ends such as a vanity and a teapot.
 2. Run the host file according to your system
     MacOS: host.command
     Windows: host.bat
-3. Go to http://localhost:8080
+3. Go to http://localhost:8000
 
 ## How to Play 
 * Use the LEFT, RIGHT, UP, DOWN arrow keys to navigate 
